@@ -1,0 +1,20 @@
+Dim directory As String, fileName As String, tool As String, columnDF As String
+tool = ActiveWorkbook.Worksheets("Tool").Range("D19").Value
+directory = ActiveWorkbook.Worksheets("Tool").Range("D20").Value & "\"
+columnDF = ActiveWorkbook.Worksheets("Tool").Range("D21").Value
+Application.ScreenUpdating = False
+fileName = Dir(directory & "*.xl??")
+Do While fileName <> ""
+    Workbooks.Open (directory & fileName)
+    On Error Resume Next
+    Workbooks(fileName).Sheets(columnDF).Activate
+    ActiveSheet.Columns("D:D").Select
+    Selection.Insert Shift:=xlToRight
+    ActiveSheet.Columns("G:G").Cut Destination:=Columns("D:D")
+    ActiveSheet.Columns("E:E").Cut Destination:=Columns("G:G")
+    ActiveSheet.Columns("E:E").EntireColumn.Delete
+    Workbooks(fileName).Save
+    Workbooks(fileName).Close
+    fileName = Dir()
+Loop
+MsgBox "files finished in " & directory
